@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 class AddTodoPage extends StatefulWidget {
   const AddTodoPage({super.key});
@@ -8,6 +11,8 @@ class AddTodoPage extends StatefulWidget {
 }
 
 class _AddTodoPageState extends State<AddTodoPage> {
+  TextEditingController titleConroller = TextEditingController();
+  TextEditingController descriptionConroller = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -17,18 +22,50 @@ class _AddTodoPageState extends State<AddTodoPage> {
       body: ListView(
         padding: const EdgeInsets.all(20),
         children: [
-          const TextField(
-            decoration: InputDecoration(hintText: 'Title'),
+          TextField(
+            controller: titleConroller,
+            decoration: const InputDecoration(hintText: 'Title'),
           ),
-          const TextField(
-            decoration: InputDecoration(hintText: 'Descroption'),
+          const SizedBox(
+            height: 20,
+          ),
+          TextField(
+            controller: descriptionConroller,
+            decoration: const InputDecoration(hintText: 'Descroption'),
             keyboardType: TextInputType.multiline,
             minLines: 5,
             maxLines: 8,
           ),
-          ElevatedButton(onPressed: () {}, child: const Text('Done'))
+          const SizedBox(
+            height: 20,
+          ),
+          ElevatedButton(onPressed: submitData, child: const Text('Submit'))
         ],
       ),
     );
+  }
+
+  Future<void> submitData() async {
+    // get the data from Form
+    final title = titleConroller.text;
+    final description = descriptionConroller.text;
+    final body = {
+      "title": title,
+      "description": description,
+      "is_completed": false
+    };
+    // submit data to the server
+    final url = 'https://api.nstack.in/v1/todos';
+    final uri = Uri.parse(url);
+    final response = await http.post(uri,
+        body: jsonEncode(body), headers: {'Content-Type': 'application/json'});
+
+    // show success or fail mesage based on status
+    if (response.statusCode == 201) {
+      print('Creation Successful!');
+    } else {
+      print('Creation failed!');
+      print(response.body);
+    }
   }
 }
