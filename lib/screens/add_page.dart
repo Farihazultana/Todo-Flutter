@@ -55,17 +55,34 @@ class _AddTodoPageState extends State<AddTodoPage> {
       "is_completed": false
     };
     // submit data to the server
-    final url = 'https://api.nstack.in/v1/todos';
+    const url = 'https://api.nstack.in/v1/todos';
     final uri = Uri.parse(url);
     final response = await http.post(uri,
         body: jsonEncode(body), headers: {'Content-Type': 'application/json'});
 
     // show success or fail mesage based on status
     if (response.statusCode == 201) {
-      print('Creation Successful!');
+      titleConroller.text = '';
+      descriptionConroller.text = '';
+      showSuccessMessage('Creation Successful!');
     } else {
-      print('Creation failed!');
-      print(response.body);
+      showErrorMessage('Creation failed!');
     }
+  }
+
+  void showSuccessMessage(String message) {
+    final snackBar = SnackBar(content: Text(message));
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  void showErrorMessage(String message) {
+    final snackBar = SnackBar(
+      content: Text(
+        message,
+        style: const TextStyle(color: Colors.white),
+      ),
+      backgroundColor: Colors.red,
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }
