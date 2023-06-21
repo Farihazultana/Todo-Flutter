@@ -5,7 +5,7 @@ import 'package:todo_app/screens/add_page.dart';
 import 'package:http/http.dart' as http;
 
 class TodoList extends StatefulWidget {
-  const TodoList({super.key});
+  const TodoList({Key? key}) : super(key: key);
 
   @override
   State<TodoList> createState() => _TodoListState();
@@ -13,6 +13,7 @@ class TodoList extends StatefulWidget {
 
 class _TodoListState extends State<TodoList> {
   List items = [];
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -28,18 +29,28 @@ class _TodoListState extends State<TodoList> {
           child: Text('Todo List'),
         ),
       ),
-      body: ListView.builder(
-          itemCount: items.length,
-          itemBuilder: (context, index) {
-            final item = items[index] as Map;
-            return ListTile(
-              leading: CircleAvatar(
-                child: Text('${index + 1}'),
-              ),
-              title: Text(item['title'].toString()),
-              subtitle: Text(item['description']),
-            );
-          }),
+      body: Visibility(
+        visible: isLoading,
+        replacement: RefreshIndicator(
+          onRefresh: fetchTodo,
+          child: ListView.builder(
+            itemCount: items.length,
+            itemBuilder: (context, index) {
+              final item = items[index] as Map;
+              return ListTile(
+                leading: CircleAvatar(
+                  child: Text('${index + 1}'),
+                ),
+                title: Text(item['title'].toString()),
+                subtitle: Text(item['description']),
+              );
+            },
+          ),
+        ),
+        child: const Center(
+          child: CircularProgressIndicator(),
+        ),
+      ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: navigateToAddPage,
         label: const Text('Add Todo'),
@@ -55,15 +66,20 @@ class _TodoListState extends State<TodoList> {
   }
 
   Future<void> fetchTodo() async {
-    const url = 'https://api.nstack.in/v1/todos?page=1&limit=20';
+    const url = 'https://api.nstack.in/v1/todos?page=3&limit=15';
     final uri = Uri.parse(url);
     final response = await http.get(uri);
+
     if (response.statusCode == 200) {
       final json = jsonDecode(response.body) as Map;
       final result = json['items'] as List;
       setState(() {
         items = result;
       });
-    } else {}
+    }
+
+    setState(() {
+      isLoading = false;
+    });
   }
 }
