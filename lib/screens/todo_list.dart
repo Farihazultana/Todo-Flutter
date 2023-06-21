@@ -43,6 +43,26 @@ class _TodoListState extends State<TodoList> {
                 ),
                 title: Text(item['title'].toString()),
                 subtitle: Text(item['description']),
+                trailing: PopupMenuButton(
+                  onSelected: (value){
+                    if(value=='edit'){
+                      //open edit page
+                    }else if(value == 'delete'){
+                      //delete and remove the item
+                    }
+                  },
+                  itemBuilder: (context) {
+                  return [
+                    const PopupMenuItem(
+                      value: 'edit',
+                      child: Text('Edit'),
+                    ),
+                    const PopupMenuItem(
+                      value: 'delete',
+                      child: Text('Delete'),
+                    ),
+                  ];
+                }),
               );
             },
           ),
