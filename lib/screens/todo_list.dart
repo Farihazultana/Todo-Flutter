@@ -47,6 +47,7 @@ class _TodoListState extends State<TodoList> {
                 trailing: PopupMenuButton(onSelected: (value) {
                   if (value == 'edit') {
                     //open edit page
+                    navigateToEditPage();
                   } else if (value == 'delete') {
                     //delete and remove the item
                     deleteById(id);
@@ -85,8 +86,15 @@ class _TodoListState extends State<TodoList> {
     Navigator.push(context, route);
   }
 
+  void navigateToEditPage() {
+    final route =
+        MaterialPageRoute(builder: ((context) => const AddTodoPage()));
+
+    Navigator.push(context, route);
+  }
+
   Future<void> fetchTodo() async {
-    const url = 'https://api.nstack.in/v1/todos?page=3&limit=15';
+    const url = 'https://api.nstack.in/v1/todos?page=1&limit=10';
     final uri = Uri.parse(url);
     final response = await http.get(uri);
 
