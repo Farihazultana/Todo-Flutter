@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class AddTodoPage extends StatefulWidget {
-  const AddTodoPage({super.key});
+  final Map? editTodo;
+  const AddTodoPage({super.key, this.editTodo});
 
   @override
   State<AddTodoPage> createState() => _AddTodoPageState();
@@ -12,11 +13,23 @@ class AddTodoPage extends StatefulWidget {
 class _AddTodoPageState extends State<AddTodoPage> {
   TextEditingController titleConroller = TextEditingController();
   TextEditingController descriptionConroller = TextEditingController();
+
+  bool isEdit = false;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (widget.editTodo != null) {
+      isEdit = true;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Add Todo'),
+        title: Text(isEdit ? 'Edit Todo' : 'Add Todo'),
       ),
       body: ListView(
         padding: const EdgeInsets.all(20),
@@ -83,8 +96,5 @@ class _AddTodoPageState extends State<AddTodoPage> {
       backgroundColor: Colors.red,
     );
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
   }
-
-  
 }

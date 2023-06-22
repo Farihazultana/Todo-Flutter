@@ -92,7 +92,7 @@ class _TodoListState extends State<TodoList> {
 
   void navigateToEditPage(Map item) {
     final route =
-        MaterialPageRoute(builder: ((context) => const AddTodoPage()));
+        MaterialPageRoute(builder: ((context) => AddTodoPage(editTodo: item)));
 
     Navigator.push(context, route);
   }
