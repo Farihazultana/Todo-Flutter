@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
+
 class AddTodoPage extends StatefulWidget {
   final Map? editTodo;
   const AddTodoPage({super.key, this.editTodo});
@@ -20,8 +21,14 @@ class _AddTodoPageState extends State<AddTodoPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    final todo = widget.editTodo;
     if (widget.editTodo != null) {
       isEdit = true;
+      final title = todo?['title'];
+      final description = todo?['description'];
+      titleConroller.text = title;
+      descriptionConroller.text = description;
+
     }
   }
 
@@ -62,7 +69,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
   }
 
   Future<void> updateData() async {
-    
+
   }
 
   Future<void> submitData() async {
