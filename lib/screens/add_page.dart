@@ -94,6 +94,7 @@ class _AddTodoPageState extends State<AddTodoPage> {
     } else {
       showErrorMessage('Updating failed!');
     }
+    
   }
 
   Future<void> submitData() async {
